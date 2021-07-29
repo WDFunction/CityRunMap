@@ -21,7 +21,12 @@ const data = _data.map((v: any) => {
 
 // @ts-ignore
 window.amapLoaded = function () {
-  const map = new AMap.Map('app');
+  const map = new AMap.Map('app', {
+    zoom: 9
+  });
+  const infoWindow = new AMap.InfoWindow({
+    anchor: 'top-left'
+  })
   const layer = new AMap.LabelsLayer({
     zooms: [3, 20],
     zIndex: 1000,
@@ -34,7 +39,7 @@ window.amapLoaded = function () {
       position: [item.GDlng, item.Gdlat],
       icon: {
         image: 'https://webapi.amap.com/theme/v1.3/markers/n/mark_b.png',
-        size: [6, 9],
+        size: [15, 20],
         anchor: 'bottom-center'
       },
       text: {
@@ -48,6 +53,20 @@ window.amapLoaded = function () {
         }
       }
     })
+
+    marker.on('mouseover', function (e) {
+      var position = e.data.data?.position;
+
+      if (position) {
+        infoWindow.setPosition(position)
+        infoWindow.setContent(item.description.split("\\n").join("<br/>"))
+        infoWindow.open(map, position, 100)
+      }
+    });
+
+    marker.on('mouseout', function () {
+      infoWindow.close()
+    });
     // @ts-ignore
     layer.add(marker)
   }
