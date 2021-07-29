@@ -1,5 +1,7 @@
+import 'reset-css'
 // @ts-ignore
 import _data from './data.csv'
+import '@amap/amap-jsapi-types'
 
 interface IRecord {
   sort: number;
@@ -17,4 +19,18 @@ const data = _data.map((v: any) => {
   return v
 }) as IRecord[]
 
-console.log(data[0])
+// @ts-ignore
+window.amapLoaded  = function(){
+  const map = new AMap.Map('app');
+  for(const item of data){
+    const marker = new AMap.Marker({
+      position: [item.GDlng, item.Gdlat],
+      title: "test"
+    })
+    map.add(marker)
+  }
+}
+const url = `https://webapi.amap.com/maps?v=1.4.15&key=${import.meta.env.VITE_AMAP_KEY}&callback=amapLoaded`
+var jsapi = document.createElement('script');
+jsapi.src = url;
+document.head.appendChild(jsapi);

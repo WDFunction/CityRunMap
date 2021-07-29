@@ -5,10 +5,12 @@
     "build": "tsc && vite build"
   },
   "devDependencies": {
+    "@amap/amap-jsapi-types": "^0.0.8",
     "typescript": "^4.3.5",
     "vite": "^2.4.4"
   },
   "dependencies": {
-    "@rollup/plugin-dsv": "^2.0.2"
+    "@rollup/plugin-dsv": "^2.0.2",
+    "reset-css": "^5.0.1"
   }
 }
