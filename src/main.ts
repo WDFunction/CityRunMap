@@ -20,15 +20,38 @@ const data = _data.map((v: any) => {
 }) as IRecord[]
 
 // @ts-ignore
-window.amapLoaded  = function(){
+window.amapLoaded = function () {
   const map = new AMap.Map('app');
-  for(const item of data){
-    const marker = new AMap.Marker({
+  const layer = new AMap.LabelsLayer({
+    zooms: [3, 20],
+    zIndex: 1000,
+    collision: true,
+    allowCollision: true,
+  })
+  for (const item of data) {
+    const marker = new AMap.LabelMarker({
+      name: item.name,
       position: [item.GDlng, item.Gdlat],
-      title: "test"
+      icon: {
+        image: 'https://webapi.amap.com/theme/v1.3/markers/n/mark_b.png',
+        size: [6, 9],
+        anchor: 'bottom-center'
+      },
+      text: {
+        content: item.name,
+        style: {
+          fillColor: '#1f1e33',
+          strokeColor: '#fff',
+          strokeWidth: 2,
+          fold: true,
+          padding: '2, 5'
+        }
+      }
     })
-    map.add(marker)
+    // @ts-ignore
+    layer.add(marker)
   }
+  map.add(layer)
 }
 const url = `https://webapi.amap.com/maps?v=1.4.15&key=${import.meta.env.VITE_AMAP_KEY}&callback=amapLoaded`
 var jsapi = document.createElement('script');
