@@ -1,4 +1,5 @@
 import 'reset-css'
+import './style.css'
 // @ts-ignore
 import _data from './data.csv'
 import '@amap/amap-jsapi-types'
@@ -10,6 +11,15 @@ const COLOR_POS = (c: string) => `<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"  width="24" height="24" viewBox="0 0 24 24">
    <path fill="${c}" d="M12,11.5A2.5,2.5 0 0,1 9.5,9A2.5,2.5 0 0,1 12,6.5A2.5,2.5 0 0,1 14.5,9A2.5,2.5 0 0,1 12,11.5M12,2A7,7 0 0,0 5,9C5,14.25 12,22 12,22C12,22 19,14.25 19,9A7,7 0 0,0 12,2Z" />
 </svg>`
+
+const names = ["XX-潇湘赛", "SD-山东赛", "WZ-温州赛", "CQ-重庆赛", "WH-武汉赛", "SY-沈阳赛", "TJ-天津赛", "SZ-深圳赛", "NJ-南京赛", "CD-成都赛", "QD-青岛赛", "GZ-广州赛", "ZH-珠海赛", "FZ-福州赛", "NC-南昌赛", "BJ-北京赛", "HZ-杭州赛", "SH-上海赛", "BR-环渤海赛", "FJ-八闽赛", "JJ-京津赛", "JJJ-京津冀赛", "YD-长三角赛"]
+
+// 不会
+// type Test<T extends string> = T extends `${infer S}-${infer N}` ? [S,N] : unknown
+
+let checked = names.map(v => v.split('-')[0])
+
+const markers: Record<string, AMap.LabelMarker[]> = {}
 
 interface IRecord {
   sort: number;
@@ -29,7 +39,7 @@ const data = _data.map((v: any) => {
 
 // @ts-ignore
 window.amapLoaded = function () {
-  const map = new AMap.Map('app', {
+  const map = new AMap.Map('map', {
     zoom: 9,
     mapStyle: 'amap://styles/whitesmoke'
   });
@@ -43,6 +53,7 @@ window.amapLoaded = function () {
     allowCollision: true,
   })
   for (const item of data) {
+    let s = item.season.split("-")[0].match(/([A-Z]+)[0-9]+/)?.[1]
     const marker = new AMap.LabelMarker({
       name: item.name,
       position: [item.GDlng, item.Gdlat],
@@ -76,10 +87,38 @@ window.amapLoaded = function () {
     marker.on('mouseout', function () {
       infoWindow.close()
     });
+    markers[s!] ||= []
+    markers[s!].push(marker)
     // @ts-ignore
     layer.add(marker)
   }
+  console.log(markers)
   map.add(layer)
+  // @ts-ignore
+  document.getElementById("root")?.insertAdjacentHTML('beforeend', '<ul>' + names.map(v => `
+  <li>
+  <label>
+    <span>${v}</span>
+    <input type="checkbox" checked name=${v.split("-")[0]}>
+  </label>
+</li>
+`).join('') + '</ul>');
+
+  [...document.querySelectorAll("input[type=checkbox]")].forEach((dom: Element) => {
+    (dom as HTMLInputElement).onchange = (e: any) => {
+      console.log(markers[e.target.name])
+      if (!e.target?.checked) {
+        checked.push(e.target?.name)
+        // @ts-ignore
+        layer.remove(markers[e.target.name])
+      } else {
+        checked = checked.filter(v => v !== e.target?.name)
+        // @ts-ignore
+        layer.add(markers[e.target.name])
+      }
+    }
+  })
+
 }
 const url = `https://webapi.amap.com/maps?v=1.4.15&key=${import.meta.env.VITE_AMAP_KEY}&callback=amapLoaded`
 var jsapi = document.createElement('script');

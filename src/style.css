@@ -1,0 +1,23 @@
+#app {
+    height: 100%; width: 100%; position: fixed;
+}
+
+#map {
+    height: 100%; width: 100%
+}
+
+#root {
+    position: absolute;
+    z-index: 10;
+    top: 20px;
+    left: 20px;
+    background: rgba(0,0,0,.1);
+    padding:8px;
+    border-radius: 5px;
+}
+
+#root ul {
+    list-style: none;
+    overflow-y: scroll;
+    max-height: 100px;
+}
