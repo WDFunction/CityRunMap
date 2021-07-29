@@ -12,7 +12,7 @@ const COLOR_POS = (c: string) => `<?xml version="1.0" encoding="UTF-8"?>
    <path fill="${c}" d="M12,11.5A2.5,2.5 0 0,1 9.5,9A2.5,2.5 0 0,1 12,6.5A2.5,2.5 0 0,1 14.5,9A2.5,2.5 0 0,1 12,11.5M12,2A7,7 0 0,0 5,9C5,14.25 12,22 12,22C12,22 19,14.25 19,9A7,7 0 0,0 12,2Z" />
 </svg>`
 
-const names = ["XX-潇湘赛", "SD-山东赛", "WZ-温州赛", "CQ-重庆赛", "WH-武汉赛", "SY-沈阳赛", "TJ-天津赛", "SZ-深圳赛", "NJ-南京赛", "CD-成都赛", "QD-青岛赛", "GZ-广州赛", "ZH-珠海赛", "FZ-福州赛", "NC-南昌赛", "BJ-北京赛", "HZ-杭州赛", "SH-上海赛", "BR-环渤海赛", "FJ-八闽赛", "JJ-京津赛", "JJJ-京津冀赛", "YD-长三角赛"]
+const names = ["XX-潇湘赛", "SD-山东赛", "WZ-温州赛", "CQ-重庆赛", "WH-武汉赛", "SY-沈阳赛", "TJ-天津赛", "SZ-深圳赛", "NJ-南京赛", "CD-成都赛", "QD-青岛赛", "GZ-广州赛", "ZH-珠海赛", "FZ-福州赛", "NC-南昌赛", "BJ-北京赛", "HZ-杭州赛", "SH-上海赛", "BR-环渤海赛", "FJ-八闽赛", "JJ-京津赛", "JJJ-京津冀赛", "YD-长三角赛", "YDM-长三角赛"]
 
 // 不会
 // type Test<T extends string> = T extends `${infer S}-${infer N}` ? [S,N] : unknown
@@ -92,7 +92,6 @@ window.amapLoaded = function () {
     // @ts-ignore
     layer.add(marker)
   }
-  console.log(markers)
   map.add(layer)
   // @ts-ignore
   document.getElementById("root")?.insertAdjacentHTML('beforeend', '<ul>' + names.map(v => `
