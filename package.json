@@ -1,0 +1,11 @@
+{
+  "name": "city-run-map",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build"
+  },
+  "devDependencies": {
+    "typescript": "^4.3.5",
+    "vite": "^2.4.4"
+  }
+}
