@@ -74,7 +74,7 @@ window.amapLoaded = function () {
       }
     })
 
-    marker.on('mouseover', function (e) {
+    const startEvt = (e: any) => {
       var position = e.data.data?.position;
 
       if (position) {
@@ -82,7 +82,10 @@ window.amapLoaded = function () {
         infoWindow.setContent(item.description.split("\\n").join("<br/>"))
         infoWindow.open(map, position, 100)
       }
-    });
+    }
+
+    marker.on('mouseover', startEvt);
+    marker.on('touchstart', startEvt);
 
     marker.on('mouseout', function () {
       infoWindow.close()
