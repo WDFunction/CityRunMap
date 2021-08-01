@@ -46,12 +46,22 @@ window.amapLoaded = function () {
   const infoWindow = new AMap.InfoWindow({
     anchor: 'top-left'
   })
-  const layer = new AMap.LabelsLayer({
-    zooms: [3, 20],
+  const massMarks = new AMap.MassMarks([], {
     zIndex: 1000,
-    collision: true,
-    allowCollision: true,
+    zooms: [3, 16],
+    // @ts-ignore
+    style: colors.map(v => COLOR_POS(v)).map(v => ({
+      url: `data:image/svg+xml;base64,${btoa(v)}`,
+      size: new AMap.Size(11, 11),
+      anchor: new AMap.Pixel(5, 5)
+    }))
   })
+  const layer = new AMap.LabelsLayer({
+    zooms: [17, 20],
+    zIndex: 1000,
+    collision: false
+  })
+  let massItems: AMap.MassData[] = []
   for (const item of data) {
     let s = item.season.split("-")[0].match(/([A-Z]+)[0-9]+/)?.[1]
     const marker = new AMap.LabelMarker({
@@ -72,6 +82,10 @@ window.amapLoaded = function () {
           padding: '2, 5'
         }
       }
+    })
+    massItems.push({
+      lnglat: new AMap.LngLat(item.GDlng, item.Gdlat),
+      style: item.sort % colors.length
     })
 
     const startEvt = (e: any) => {
@@ -96,6 +110,8 @@ window.amapLoaded = function () {
     layer.add(marker)
   }
   map.add(layer)
+  massMarks.setData(massItems)
+  massMarks.setMap(map)
   // @ts-ignore
   document.getElementById("root")?.insertAdjacentHTML('beforeend', '<ul>' + names.map(v => `
   <li>
