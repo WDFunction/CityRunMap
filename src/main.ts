@@ -61,9 +61,18 @@ window.amapLoaded = function () {
     zIndex: 1000,
     collision: false
   })
+
+  // 创建连线
+  let paths: Record<string, AMap.LngLat[]> = {}
+  let pathColors: Record<string, number> = {}
   let massItems: AMap.MassData[] = []
   for (const item of data) {
     let s = item.season.split("-")[0].match(/([A-Z]+)[0-9]+/)?.[1]
+    let detailSeason = item.season.split("-")[0]
+    paths[detailSeason] ||= []
+    paths[detailSeason].push(new AMap.LngLat(item.GDlng, item.Gdlat))
+    pathColors[detailSeason] = item.sort % colors.length
+
     const marker = new AMap.LabelMarker({
       name: item.name,
       position: [item.GDlng, item.Gdlat],
@@ -112,6 +121,33 @@ window.amapLoaded = function () {
   map.add(layer)
   massMarks.setData(massItems)
   massMarks.setMap(map)
+
+  let polylines = Object.keys(paths).map((k: string) => {
+    return new AMap.Polyline({
+      path: paths[k],
+      borderWeight: 2,
+      strokeColor: colors[pathColors[k]],
+      lineJoin: 'round',
+      zooms: [15, 19],
+      strokeOpacity: 0.5,
+      showDir: true
+    })
+  })
+  let showLines = false
+  map.on('zoomend', () => {
+    if (map.getZoom() >= 13) {
+      if (!showLines) {
+        map.add(polylines)
+      }
+      showLines = true
+    } else {
+      if (showLines) {
+        map.remove(polylines)
+      }
+      showLines = false
+    }
+  })
+
   // @ts-ignore
   document.getElementById("root")?.insertAdjacentHTML('beforeend', '<ul>' + names.map(v => `
   <li>
