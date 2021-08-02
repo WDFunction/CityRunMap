@@ -113,7 +113,8 @@ window.amapLoaded = function () {
         url: `data:image/svg+xml;base64,${btoa(v)}`,
         size: new AMap.Size(11, 11),
         anchor: new AMap.Pixel(5, 5)
-      }))
+      })),
+      alwaysRender: false
     })
 
     massMarks[k].setMap(map)
